@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for LOOP app */
+@layer base {
+  :root {
+    --background: 249 250 251;
+    --foreground: 15 23 42;
+    --muted: 241 245 249;
+    --muted-foreground: 100 116 139;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+    --primary: 14 165 233;
+    --primary-foreground: 255 255 255;
+    --secondary: 241 245 249;
+    --secondary-foreground: 15 23 42;
+    --accent: 241 245 249;
+    --accent-foreground: 15 23 42;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --ring: 14 165 233;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --muted: 30 41 59;
+    --muted-foreground: 148 163 184;
+    --popover: 15 23 42;
+    --popover-foreground: 248 250 252;
+    --border: 30 41 59;
+    --input: 30 41 59;
+    --card: 15 23 42;
+    --card-foreground: 248 250 252;
+    --primary: 14 165 233;
+    --primary-foreground: 255 255 255;
+    --secondary: 30 41 59;
+    --secondary-foreground: 248 250 252;
+    --accent: 30 41 59;
+    --accent-foreground: 248 250 252;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --ring: 14 165 233;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-xl shadow-lg transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary-100 hover:bg-secondary-200 text-secondary-900 font-medium py-3 px-6 rounded-xl transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white dark:bg-secondary-800 rounded-2xl shadow-lg border border-secondary-200 dark:border-secondary-700 p-6;
+  }
+
+  .input {
+    @apply bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-xl px-4 py-3 text-secondary-900 dark:text-secondary-100 placeholder-secondary-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all duration-200;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700;
+  }
+
+  .glass-effect {
+    @apply bg-white/80 dark:bg-secondary-800/80 backdrop-blur-lg border border-white/20 dark:border-secondary-700/50;
+  }
+}
