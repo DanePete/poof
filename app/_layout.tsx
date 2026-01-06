@@ -1,23 +1,10 @@
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
+import '../global.css';
 
-// Custom dark theme for Paper
-const paperTheme = {
-  ...MD3DarkTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    primary: '#8b5cf6',
-    secondary: '#6366f1',
-    background: '#0f172a',
-    surface: '#1e293b',
-    surfaceVariant: '#334155',
-    onSurface: '#f8fafc',
-    onSurfaceVariant: '#94a3b8',
-  },
-};
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -25,7 +12,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <PaperProvider theme={paperTheme}>
+    <GluestackUIProvider mode="dark">
       <ThemeProvider value={DarkTheme}>
         <Stack
           screenOptions={{
@@ -36,6 +23,13 @@ export default function RootLayout() {
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen 
+            name="login" 
+            options={{ 
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }} 
+          />
+          <Stack.Screen 
             name="liquidate" 
             options={{ 
               headerShown: true,
@@ -43,10 +37,26 @@ export default function RootLayout() {
               headerBackTitle: 'Back',
             }} 
           />
+          <Stack.Screen 
+            name="profile" 
+            options={{ 
+              headerShown: true,
+              title: 'Profile',
+              headerBackTitle: 'Back',
+            }} 
+          />
+          <Stack.Screen 
+            name="settings" 
+            options={{ 
+              headerShown: true,
+              title: 'Settings',
+              headerBackTitle: 'Back',
+            }} 
+          />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>
         <StatusBar style="light" />
       </ThemeProvider>
-    </PaperProvider>
+    </GluestackUIProvider>
   );
 }

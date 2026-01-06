@@ -1,16 +1,21 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
-import { Card, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width } = Dimensions.get('window');
+// gluestack-ui components
+import { Box } from '@/components/ui/box';
+import { VStack } from '@/components/ui/vstack';
+import { HStack } from '@/components/ui/hstack';
+import { Heading } from '@/components/ui/heading';
+import { Text } from '@/components/ui/text';
+import { Center } from '@/components/ui/center';
+import { Button, ButtonText } from '@/components/ui/button';
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <LinearGradient
           colors={['#6366f1', '#8b5cf6', '#a855f7']}
@@ -18,116 +23,143 @@ export default function HomeScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.heroSection}
         >
-          <View style={styles.heroContent}>
-            <View style={styles.logoContainer}>
-              <Text style={styles.logoEmoji}>💎</Text>
-            </View>
+          <Center>
+            <Box className="w-20 h-20 bg-white/20 rounded-2xl items-center justify-center mb-6">
+              <Text size="4xl">💎</Text>
+            </Box>
 
-            <Text style={styles.heroTitle}>Turn Clutter Into</Text>
-            <Text style={styles.heroTitle}>Cash Instantly</Text>
+            <Heading size="4xl" className="text-white text-center">
+              Turn Clutter Into
+            </Heading>
+            <Heading size="4xl" className="text-white text-center">
+              Cash Instantly
+            </Heading>
 
-            <Text style={styles.heroSubtitle}>
+            <Text size="lg" className="text-white/90 text-center mt-4 leading-7">
               Snap a photo, get instant value, summon a courier.{'\n'}
               Your lazy consumer dream come true.
             </Text>
 
-            <View style={styles.buttonRow}>
+            <HStack space="md" className="mt-8">
               <Link href="/liquidate" asChild>
-                <TouchableOpacity style={styles.primaryButton}>
-                  <Text style={styles.primaryButtonText}>🚀 Start Liquidating</Text>
-                </TouchableOpacity>
+                <Button size="lg" className="bg-white rounded-xl px-6 shadow-lg">
+                  <ButtonText className="text-indigo-500 font-bold">🚀 Start Liquidating</ButtonText>
+                </Button>
               </Link>
 
-              <TouchableOpacity style={styles.secondaryButton}>
-                <Text style={styles.secondaryButtonText}>How it Works</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white/30 bg-white/15 rounded-xl px-6"
+              >
+                <ButtonText className="text-white">How it Works</ButtonText>
+              </Button>
+            </HStack>
+          </Center>
         </LinearGradient>
 
         {/* Features Section */}
-        <View style={styles.featuresSection}>
-          <Text style={styles.sectionTitle}>Why LOOP?</Text>
+        <Box className="bg-slate-800 px-6 py-12 -mt-10 rounded-t-3xl">
+          <Heading size="2xl" className="text-slate-50 text-center mb-8">
+            Why LOOP?
+          </Heading>
 
-          <View style={styles.featureCards}>
+          <VStack space="md">
             {/* Feature 1 */}
-            <View style={styles.featureCard}>
-              <View style={[styles.featureIcon, { backgroundColor: '#e0f2fe' }]}>
-                <Text style={styles.featureEmoji}>📸</Text>
-              </View>
-              <Text style={styles.featureTitle}>One Photo = Instant Value</Text>
-              <Text style={styles.featureDescription}>
+            <Box className="bg-slate-700 rounded-2xl p-6 border border-slate-600">
+              <Box className="w-14 h-14 rounded-2xl bg-sky-100 items-center justify-center mb-4">
+                <Text size="2xl">📸</Text>
+              </Box>
+              <Heading size="lg" className="text-slate-50 mb-2">
+                One Photo = Instant Value
+              </Heading>
+              <Text className="text-slate-400 leading-6">
                 AI analyzes your item in seconds. No listings, no haggling, no waiting.
               </Text>
-            </View>
+            </Box>
 
             {/* Feature 2 */}
-            <View style={styles.featureCard}>
-              <View style={[styles.featureIcon, { backgroundColor: '#dcfce7' }]}>
-                <Text style={styles.featureEmoji}>🚚</Text>
-              </View>
-              <Text style={styles.featureTitle}>Courier Comes to You</Text>
-              <Text style={styles.featureDescription}>
+            <Box className="bg-slate-700 rounded-2xl p-6 border border-slate-600">
+              <Box className="w-14 h-14 rounded-2xl bg-green-100 items-center justify-center mb-4">
+                <Text size="2xl">🚚</Text>
+              </Box>
+              <Heading size="lg" className="text-slate-50 mb-2">
+                Courier Comes to You
+              </Heading>
+              <Text className="text-slate-400 leading-6">
                 Professional pickup with prepaid shipping. Just hand over your item.
               </Text>
-            </View>
+            </Box>
 
             {/* Feature 3 */}
-            <View style={styles.featureCard}>
-              <View style={[styles.featureIcon, { backgroundColor: '#fef3c7' }]}>
-                <Text style={styles.featureEmoji}>💰</Text>
-              </View>
-              <Text style={styles.featureTitle}>Get Paid Fast</Text>
-              <Text style={styles.featureDescription}>
+            <Box className="bg-slate-700 rounded-2xl p-6 border border-slate-600">
+              <Box className="w-14 h-14 rounded-2xl bg-amber-100 items-center justify-center mb-4">
+                <Text size="2xl">💰</Text>
+              </Box>
+              <Heading size="lg" className="text-slate-50 mb-2">
+                Get Paid Fast
+              </Heading>
+              <Text className="text-slate-400 leading-6">
                 Money hits your account within 24 hours. Track everything in real-time.
               </Text>
-            </View>
-          </View>
-        </View>
+            </Box>
+          </VStack>
+        </Box>
 
         {/* Stats Section */}
-        <View style={styles.statsSection}>
-          <Text style={styles.statsTitle}>Trusted by Thousands</Text>
+        <Box className="bg-slate-900 px-6 py-12">
+          <Heading size="xl" className="text-slate-50 text-center mb-8">
+            Trusted by Thousands
+          </Heading>
 
-          <View style={styles.statsRow}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>50K+</Text>
-              <Text style={styles.statLabel}>Items Liquidated</Text>
-            </View>
+          <HStack className="justify-around flex-wrap gap-6">
+            <VStack className="items-center">
+              <Heading size="3xl" className="text-violet-500">50K+</Heading>
+              <Text size="sm" className="text-slate-500 mt-1">Items Liquidated</Text>
+            </VStack>
 
-            <View style={styles.statItem}>
-              <Text style={[styles.statNumber, { color: '#22c55e' }]}>$2M+</Text>
-              <Text style={styles.statLabel}>Paid to Users</Text>
-            </View>
+            <VStack className="items-center">
+              <Heading size="3xl" className="text-green-500">$2M+</Heading>
+              <Text size="sm" className="text-slate-500 mt-1">Paid to Users</Text>
+            </VStack>
 
-            <View style={styles.statItem}>
-              <Text style={[styles.statNumber, { color: '#f59e0b' }]}>4.9⭐</Text>
-              <Text style={styles.statLabel}>User Rating</Text>
-            </View>
-          </View>
-        </View>
+            <VStack className="items-center">
+              <Heading size="3xl" className="text-amber-500">4.9⭐</Heading>
+              <Text size="sm" className="text-slate-500 mt-1">User Rating</Text>
+            </VStack>
+          </HStack>
+        </Box>
 
         {/* CTA Section */}
-        <View style={styles.ctaSection}>
-          <View style={styles.ctaCard}>
-            <Text style={styles.ctaTitle}>Ready to Declutter?</Text>
-            <Text style={styles.ctaDescription}>
-              Join thousands who've turned their closets into cash.{'\n'}
-              Download LOOP today and start liquidating.
-            </Text>
+        <Box className="px-6 py-6">
+          <Box className="bg-slate-800 rounded-3xl p-8 border border-slate-700">
+            <Center>
+              <Heading size="2xl" className="text-slate-50 text-center mb-3">
+                Ready to Declutter?
+              </Heading>
+              <Text className="text-slate-400 text-center leading-6 mb-6">
+                Join thousands who have turned their closets into cash.{'\n'}
+                Download LOOP today and start liquidating.
+              </Text>
 
-            <Link href="/liquidate" asChild>
-              <TouchableOpacity style={styles.ctaButton}>
-                <Text style={styles.ctaButtonText}>Get Started Now →</Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
+              <Link href="/liquidate" asChild>
+                <Button 
+                  size="lg" 
+                  className="bg-violet-500 rounded-xl px-8 shadow-lg"
+                >
+                  <ButtonText className="text-white font-bold text-lg">
+                    Get Started Now →
+                  </ButtonText>
+                </Button>
+              </Link>
+            </Center>
+          </Box>
+        </Box>
 
         {/* Footer spacing */}
-        <View style={{ height: 40 }} />
+        <Box className="h-10" />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -136,195 +168,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
   },
-  scrollView: {
-    flex: 1,
-  },
   heroSection: {
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 80,
-  },
-  heroContent: {
-    alignItems: 'center',
-  },
-  logoContainer: {
-    width: 80,
-    height: 80,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-  logoEmoji: {
-    fontSize: 40,
-  },
-  heroTitle: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#ffffff',
-    textAlign: 'center',
-    letterSpacing: -1,
-  },
-  heroSubtitle: {
-    fontSize: 18,
-    color: 'rgba(255,255,255,0.9)',
-    textAlign: 'center',
-    marginTop: 16,
-    lineHeight: 26,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 32,
-    gap: 12,
-  },
-  primaryButton: {
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  primaryButtonText: {
-    color: '#6366f1',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  secondaryButton: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
-  },
-  secondaryButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  featuresSection: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 24,
-    paddingVertical: 48,
-    marginTop: -40,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-  },
-  sectionTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#f8fafc',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  featureCards: {
-    gap: 16,
-  },
-  featureCard: {
-    backgroundColor: '#334155',
-    borderRadius: 20,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: '#475569',
-  },
-  featureIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  featureEmoji: {
-    fontSize: 28,
-  },
-  featureTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#f8fafc',
-    marginBottom: 8,
-  },
-  featureDescription: {
-    fontSize: 16,
-    color: '#94a3b8',
-    lineHeight: 24,
-  },
-  statsSection: {
-    backgroundColor: '#0f172a',
-    paddingHorizontal: 24,
-    paddingVertical: 48,
-  },
-  statsTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#f8fafc',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    flexWrap: 'wrap',
-    gap: 24,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#8b5cf6',
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#64748b',
-    marginTop: 4,
-  },
-  ctaSection: {
-    paddingHorizontal: 24,
-    paddingVertical: 24,
-  },
-  ctaCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 24,
-    padding: 32,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  ctaTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#f8fafc',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  ctaDescription: {
-    fontSize: 16,
-    color: '#94a3b8',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 24,
-  },
-  ctaButton: {
-    backgroundColor: '#8b5cf6',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 12,
-    shadowColor: '#8b5cf6',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  ctaButtonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '700',
   },
 });
