@@ -26,6 +26,7 @@
     "@react-stately/collections": "^3.12.8",
     "@react-stately/overlays": "^3.6.21",
     "@shopify/flash-list": "^1.7.1",
+    "@supabase/supabase-js": "^2.89.0",
     "@tamagui/config": "^1.112.11",
     "expo": "~54.0.30",
     "expo-constants": "~18.0.12",

@@ -26,6 +26,66 @@
 
 ---
 
+## ⚡ Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start on web
+npx expo start --web
+
+# Start on iOS
+npx expo start --ios
+
+# Clear cache and restart
+npx expo start --clear
+
+# Kill stuck processes
+pkill -f expo
+```
+
+---
+
+## 🔐 Environment Setup (IMPORTANT)
+
+This project uses environment variables to protect API credentials.
+
+### Initial Setup
+
+```bash
+# 1. Copy the example file
+cp .env.example .env.local
+
+# 2. Edit .env.local with your Supabase credentials
+# Get these from: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api
+```
+
+### Environment Variables
+
+| Variable | Description | Safe to Expose? |
+|----------|-------------|-----------------|
+| `EXPO_PUBLIC_SUPABASE_URL` | Your Supabase project URL | ✅ Yes |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Public/Anon API key | ✅ Yes (with RLS) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Admin key (server only!) | ❌ **NEVER** |
+
+### Security Rules
+
+1. **Never commit `.env.local`** - It's gitignored for a reason
+2. **The `anon` key is safe** when Row Level Security (RLS) is enabled
+3. **Never use `service_role` key** in client code - use Edge Functions
+4. **For production**: Use EAS Secrets or your CI/CD's secret management
+
+### Production Deployment (EAS)
+
+```bash
+# Set secrets for EAS builds
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://xxx.supabase.co"
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your-key"
+```
+
+---
+
 ## 🎯 The Problem
 
 You have stuff you don't need. Selling it is a nightmare:
@@ -125,26 +185,131 @@ npm install
 npx expo start
 ```
 
+---
+
+## 🛠 Development Commands
+
+### Starting the App
+
+```bash
+# Start Expo development server (shows QR code + options)
+npx expo start
+
+# Start directly in web browser
+npx expo start --web
+
+# Start directly on iOS simulator
+npx expo start --ios
+
+# Start directly on Android emulator
+npx expo start --android
+
+# Start with specific port
+npx expo start --web --port 3000
+```
+
+### Cache & Troubleshooting
+
+```bash
+# Clear Metro bundler cache and restart
+npx expo start --clear
+
+# Clear all caches (Metro, node_modules cache, Expo cache)
+rm -rf node_modules/.cache
+npx expo start --clear
+
+# Full reset (when things are really broken)
+rm -rf node_modules
+rm -rf .expo
+npm install
+npx expo start --clear
+
+# Clear watchman cache (if using watchman)
+watchman watch-del-all
+```
+
+### Process Management
+
+```bash
+# Kill all Expo processes (when port is in use)
+pkill -f expo
+
+# Find what's using a specific port
+lsof -i :8081
+
+# Kill process on specific port
+kill -9 $(lsof -t -i:8081)
+```
+
+### Building & Deployment
+
+```bash
+# Create production build for web
+npx expo export --platform web
+
+# Create development build for iOS
+npx expo run:ios
+
+# Create development build for Android
+npx expo run:android
+
+# Create EAS build (requires EAS CLI)
+eas build --platform ios
+eas build --platform android
+```
+
+### Database (Supabase)
+
+```bash
+# Run database migrations (copy schema.sql to Supabase SQL Editor)
+# Open: https://supabase.com/dashboard/project/YOUR_PROJECT/sql
+
+# Generate TypeScript types from Supabase
+npx supabase gen types typescript --project-id YOUR_PROJECT_ID > lib/database.types.ts
+```
+
+### Useful Shortcuts in Expo Dev Server
+
+When the dev server is running, press:
+- `i` — Open iOS Simulator
+- `a` — Open Android Emulator
+- `w` — Open in web browser
+- `r` — Reload app
+- `m` — Toggle menu
+- `j` — Open debugger
+- `o` — Open project code in editor
+- `?` — Show all commands
+
+---
+
 ### Running on Device
 
 - **iOS Simulator**: Press `i` in the terminal
 - **Android Emulator**: Press `a` in the terminal  
 - **Physical Device**: Scan QR code with Expo Go app
+- **Web Browser**: Press `w` or use `npx expo start --web`
 
 ### Environment Setup
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory (copy from `env.example`):
+
+```bash
+cp env.example .env
+```
+
+Then fill in your values:
 
 ```env
+# Supabase (required for auth & database)
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
 # Google Gemini API (for AI vision)
 GEMINI_API_KEY=your_gemini_api_key
 
-# Firebase/Supabase (for database)
-DATABASE_URL=your_database_url
-
 # Stripe (for payments)
-STRIPE_SECRET_KEY=your_stripe_key
-STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
 
 # Courier APIs
 UBER_DIRECT_API_KEY=your_uber_key
@@ -159,15 +324,17 @@ DOORDASH_API_KEY=your_doordash_key
 
 | Layer | Technology |
 |-------|------------|
-| **Mobile App** | React Native 0.81 + Expo 54 |
-| **Styling** | NativeWind (Tailwind CSS) + Tamagui |
+| **Mobile App** | React Native + Expo 54 |
+| **UI Components** | Gluestack UI v3 + React Native Paper |
+| **Styling** | NativeWind (Tailwind CSS) + StyleSheet |
 | **Navigation** | Expo Router (file-based) |
-| **State** | React Context + AsyncStorage |
+| **Auth & Database** | Supabase (PostgreSQL + Auth) |
+| **State** | React Context + Custom Hooks |
 | **AI Engine** | Google Gemini 1.5 Flash |
-| **Database** | Firebase Firestore / Supabase |
 | **Payments** | Stripe Connect |
 | **Courier** | Uber Direct / DoorDash Drive |
-| **Animations** | Moti + Reanimated |
+| **Icons** | Lucide React Native |
+| **Animations** | React Native Reanimated |
 
 ### Project Structure
 
@@ -175,18 +342,41 @@ DOORDASH_API_KEY=your_doordash_key
 poof/
 ├── app/                      # Expo Router screens
 │   ├── (tabs)/              # Tab navigation
+│   │   ├── _layout.tsx      # Tab navigator config
 │   │   ├── index.tsx        # Home screen
-│   │   └── explore.tsx      # Browse/history
+│   │   ├── explore.tsx      # Browse marketplace
+│   │   ├── history.tsx      # Item history
+│   │   └── account.tsx      # User account
+│   ├── _layout.tsx          # Root layout with providers
 │   ├── liquidate.tsx        # Liquidation flow
-│   └── _layout.tsx          # Root layout
+│   ├── login.tsx            # Authentication screen
+│   ├── profile.tsx          # User profile editor
+│   └── settings.tsx         # App settings
 ├── components/              # Reusable components
-│   ├── LiquidationScreen.tsx
-│   └── ui/                  # UI primitives
-├── constants/               # Theme & config
+│   ├── Header.tsx           # App header with menu
+│   ├── DrawerMenu.tsx       # Navigation drawer
+│   └── ui/                  # Gluestack UI components
+│       ├── box/, button/, text/, heading/...
+│       ├── gluestack-ui-provider/  # Theme provider
+│       └── index.tsx        # Barrel exports
+├── contexts/                # React contexts
+│   └── AuthContext.tsx      # Authentication state
 ├── hooks/                   # Custom React hooks
+│   ├── useProfile.ts        # Profile data hook
+│   └── useItems.ts          # Items CRUD hook
+├── lib/                     # Core libraries
+│   ├── supabase.ts          # Supabase client
+│   └── database.types.ts    # TypeScript DB types
+├── constants/               # Theme & config
 ├── assets/                  # Images & fonts
+├── supabase/                # Database setup
+│   └── schema.sql           # Database schema & RLS
+├── docs/                    # Documentation
+│   └── gluestack-ui-reference.md
 ├── ai-vision-service.py     # AI backend service
-└── database-schema.ts       # TypeScript schema definitions
+├── database-schema.ts       # TypeScript schema definitions
+├── env.example              # Environment template
+└── global.css               # Tailwind imports
 ```
 
 ### Data Flow
@@ -295,16 +485,63 @@ Built with **Gluestack UI** + **NativeWind** for a beautiful, consistent design:
 
 ## 🛣 Roadmap
 
-- [x] AI product identification
-- [x] Price estimation engine
-- [x] Liquidation screen UI
-- [ ] Camera integration
-- [ ] Courier API integration (Uber Direct)
-- [ ] Multi-marketplace listing
+### ✅ Phase 1: Foundation (Complete)
+- [x] Project setup with Expo SDK 54
+- [x] Gluestack UI component library integration
+- [x] Tab navigation (Home, Explore, History, Account)
+- [x] Dark mode theming
+- [x] Liquidation screen UI mockup
+
+### ✅ Phase 2: Backend & Auth (Complete)
+- [x] Supabase project setup
+- [x] Database schema with 7 tables (profiles, items, listings, etc.)
+- [x] Row Level Security (RLS) policies
+- [x] User authentication (Email/Password)
+- [x] OAuth scaffolding (Google, Apple - needs provider setup)
+- [x] Profile management & editing
+- [x] Session persistence (web + native)
+- [x] Environment variable security setup
+- [x] Email confirmation modal flow
+
+### ✅ Phase 3: Core Screens (Complete)
+- [x] Login/Signup with validation
+- [x] Profile screen with stats
+- [x] Settings screen
+- [x] History screen with filtering
+- [x] Account dashboard
+
+### 🚧 Phase 4: AI Integration (In Progress)
+- [ ] Camera/image picker integration
+- [ ] Connect Gemini 1.5 Flash API
+- [ ] Product identification from photos
+- [ ] Condition assessment
+- [ ] Price estimation engine
+- [ ] SEO title/description generation
+
+### 📋 Phase 5: Marketplace (Planned)
+- [ ] Multi-marketplace listing (eBay, FB, OfferUp)
+- [ ] Price history tracking
 - [ ] AI negotiation bot
-- [ ] Stripe Connect payouts
+- [ ] Offer management
+
+### 📋 Phase 6: Logistics (Planned)
+- [ ] Courier API integration (Uber Direct/Shipt)
+- [ ] Pickup scheduling
+- [ ] Real-time tracking
+- [ ] Delivery confirmation
+
+### 📋 Phase 7: Payments (Planned)
+- [ ] Stripe Connect integration
+- [ ] Payout management
+- [ ] Transaction history
+- [ ] Fee calculations
+
+### 📋 Phase 8: Polish (Planned)
+- [ ] Onboarding flow
 - [ ] Push notifications
 - [ ] Analytics dashboard
+- [ ] Performance optimizations
+- [ ] App Store / Play Store deployment
 
 ---
 

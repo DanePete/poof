@@ -1,126 +1,107 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, Text as RNText } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// gluestack-ui components
-import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import { Heading } from '@/components/ui/heading';
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
 
 interface HeaderProps {
-  title?: string;
-  showMenu?: boolean;
-  showProfile?: boolean;
-  onMenuPress?: () => void;
+  title: string;
 }
 
-export function Header({ 
-  title = 'LOOP', 
-  showMenu = true, 
-  showProfile = true,
-  onMenuPress 
-}: HeaderProps) {
-  const insets = useSafeAreaInsets();
+const Header: React.FC<HeaderProps> = ({ title }) => {
+  const { user } = useAuth();
+  const { profile } = useProfile();
+
+  // Get initials for avatar
+  const initials = profile?.full_name
+    ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.email?.slice(0, 2).toUpperCase() || '?';
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
-      <View style={styles.content}>
-        {/* Left: Hamburger Menu */}
+    <View style={styles.header}>
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => router.push('/(app)/settings')}
+      >
+        <RNText style={styles.menuIcon}>☰</RNText>
+      </TouchableOpacity>
+      
+      <RNText style={styles.title}>{title}</RNText>
+      
+      {user ? (
         <TouchableOpacity 
-          style={styles.iconButton}
-          onPress={onMenuPress}
+          style={styles.avatarButton}
+          onPress={() => router.push('/(app)/profile')}
         >
-          <View style={styles.hamburger}>
-            <View style={styles.hamburgerLine} />
-            <View style={[styles.hamburgerLine, styles.hamburgerLineShort]} />
-            <View style={styles.hamburgerLine} />
+          <View style={styles.avatar}>
+            <RNText style={styles.avatarText}>{initials}</RNText>
           </View>
         </TouchableOpacity>
-
-        {/* Center: Logo/Title */}
-        <View style={styles.logoContainer}>
-          <View style={styles.logoIcon}>
-            <Text size="lg">💎</Text>
-          </View>
-          <Heading size="lg" className="text-slate-50 tracking-tight">
-            {title}
-          </Heading>
-        </View>
-
-        {/* Right: Profile Avatar */}
-        {showProfile ? (
-          <TouchableOpacity 
-            style={styles.iconButton}
-            onPress={() => router.push('/profile')}
-          >
-            <View style={styles.avatar}>
-              <Text size="sm">👤</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.iconButton} />
-        )}
-      </View>
+      ) : (
+        <TouchableOpacity 
+          style={styles.loginButton}
+          onPress={() => router.push('/(auth)/login')}
+        >
+          <RNText style={styles.loginText}>Login</RNText>
+        </TouchableOpacity>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    backgroundColor: '#0f172a',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
-  },
-  content: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingTop: 50, // Account for safe area
     paddingBottom: 12,
+    backgroundColor: '#0f172a',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
   },
-  iconButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+  menuButton: {
+    padding: 8,
   },
-  hamburger: {
-    width: 22,
-    height: 16,
-    justifyContent: 'space-between',
+  menuIcon: {
+    fontSize: 24,
+    color: '#f8fafc',
   },
-  hamburgerLine: {
-    width: '100%',
-    height: 2.5,
-    backgroundColor: '#f8fafc',
-    borderRadius: 2,
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#f8fafc',
   },
-  hamburgerLineShort: {
-    width: '70%',
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  logoIcon: {
-    width: 32,
-    height: 32,
-    backgroundColor: 'rgba(139, 92, 246, 0.2)',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+  avatarButton: {
+    padding: 4,
   },
   avatar: {
     width: 36,
     height: 36,
-    backgroundColor: 'rgba(139, 92, 246, 0.3)',
     borderRadius: 18,
+    backgroundColor: '#8b5cf6',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(139, 92, 246, 0.5)',
+  },
+  avatarText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  loginButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#8b5cf6',
+  },
+  loginText: {
+    color: '#8b5cf6',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
+
+export default Header;

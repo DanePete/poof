@@ -1,21 +1,15 @@
 import { Tabs } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { Header } from '@/components/Header';
-import { DrawerMenu } from '@/components/DrawerMenu';
+import Header from '@/components/Header';
 
 export default function TabLayout() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   return (
     <View style={styles.container}>
       {/* Custom Header */}
-      <Header 
-        title="LOOP" 
-        onMenuPress={() => setIsDrawerOpen(true)} 
-      />
+      <Header title="LOOP" />
 
       {/* Tab Navigator */}
       <View style={styles.tabContainer}>
@@ -76,12 +70,6 @@ export default function TabLayout() {
           />
         </Tabs>
       </View>
-
-      {/* Drawer Menu Overlay */}
-      <DrawerMenu 
-        isOpen={isDrawerOpen} 
-        onClose={() => setIsDrawerOpen(false)} 
-      />
     </View>
   );
 }
